@@ -1,2 +1,2 @@
-# flutter_tinder_swipe_card
-Example swipe card in Tinder app
+# flutter_app_book_store
+Create app Book Store 
