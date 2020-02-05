@@ -8,6 +8,8 @@ import 'package:flutter_app_book_store/shared/app_color.dart';
 import 'package:flutter_app_book_store/shared/widget/normal_button.dart';
 import 'package:provider/provider.dart';
 
+import 'signin_bloc.dart';
+
 class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -44,14 +46,7 @@ class SignInFormWidget extends StatelessWidget {
             children: <Widget>[
               _buildPhoneField(bloc),
               _buildPassField(bloc),
-              NormalButton(
-                onPressed: () {
-                  bloc.event.add(SignInEvent(
-                    phone: _txtPhoneController.text,
-                    pass: _txtPassController.text,
-                  ));
-                },
-              ),
+              buildSignInButton(bloc),
               _buildFooter(),
             ],
           ),
@@ -74,48 +69,78 @@ class SignInFormWidget extends StatelessWidget {
     );
   }
 
+  Widget buildSignInButton(SignInBloc bloc) {
+    return StreamProvider<bool>.value(
+      initialData: false,
+      value: bloc.btnStream,
+      child: Consumer<bool>(
+        builder: (context, enable, child) => NormalButton(
+          title: 'Sign In',
+          onPressed: enable ? () {
+            bloc.event.add(SignInEvent(
+              phone: _txtPhoneController.text,
+              pass: _txtPassController.text,
+            ));
+          } : null,
+        ),
+      ),
+    );
+  }
+
   Widget _buildPhoneField(SignInBloc bloc) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      child: TextField(
-        controller: _txtPhoneController,
-        onChanged: (text) {
-          print(text);
-        },
-        cursorColor: Colors.black,
-        keyboardType: TextInputType.phone,
-        decoration: InputDecoration(
-            icon: Icon(
-              Icons.phone,
-              color: AppColor.blue,
-            ),
-            hintText: '(+84) 973 901 789',
-            labelText: 'Phone',
-            errorText: null,
-          labelStyle: TextStyle(color: AppColor.blue)),
+    return StreamProvider<String>.value(
+      initialData: null,
+      value: bloc.phoneStream,
+      child: Consumer<String>(
+        builder: (context, msg, child) => Container(
+          margin: EdgeInsets.only(bottom: 15),
+          child: TextField(
+            controller: _txtPhoneController,
+            onChanged: (text) {
+              bloc.phoneSink.add(text);
+            },
+            cursorColor: Colors.black,
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+                icon: Icon(
+                  Icons.phone,
+                  color: AppColor.blue,
+                ),
+                hintText: '(+84) 973 901 789',
+                labelText: 'Phone',
+                errorText: msg,
+              labelStyle: TextStyle(color: AppColor.blue)),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildPassField(SignInBloc bloc) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 25),
-      child: TextField(
-        controller: _txtPassController,
-        onChanged: (text) {
-          print(text);
-        },
-        obscureText: true,
-        cursorColor: Colors.black,
-        decoration: InputDecoration(
-            icon: Icon(
-              Icons.phone,
-              color: AppColor.blue,
-            ),
-            hintText: 'Password',
-            labelText: 'Password',
-            errorText: null,
-            labelStyle: TextStyle(color: AppColor.blue)),
+    return StreamProvider<String>.value(
+      initialData: null,
+      value: bloc.passStream,
+      child: Consumer<String>(
+        builder: (context, msg, child) => Container(
+          margin: EdgeInsets.only(bottom: 25),
+          child: TextField(
+            controller: _txtPassController,
+            onChanged: (text) {
+              bloc.passSink.add(text);
+            },
+            obscureText: true,
+            cursorColor: Colors.black,
+            decoration: InputDecoration(
+                icon: Icon(
+                  Icons.phone,
+                  color: AppColor.blue,
+                ),
+                hintText: 'Password',
+                labelText: 'Password',
+                errorText: msg,
+                labelStyle: TextStyle(color: AppColor.blue)),
+          ),
+        ),
       ),
     );
   }
