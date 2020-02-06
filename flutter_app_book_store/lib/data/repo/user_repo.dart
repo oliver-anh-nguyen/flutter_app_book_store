@@ -29,4 +29,22 @@ class UserRepo {
     }
     return c.future;
   }
+
+  Future<UserData> signUp(String displayName, String phone, String pass) async {
+    var c = Completer<UserData>();
+    try {
+      var response = await _userService.signUp(displayName, phone, pass);
+      var userData = UserData.fromJson(response.data['data']);
+      if (userData != null) {
+        SPref.instance.set(SPrefCache.KEY_TOKEN, userData.token);
+        c.complete(userData);
+      }
+    } on DioError {
+      c.completeError('Login fail!!!');
+    } catch (e) {
+      c.completeError(e);
+    }
+
+    return c.future;
+  }
 }

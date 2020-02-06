@@ -47,7 +47,7 @@ class SignInFormWidget extends StatelessWidget {
               _buildPhoneField(bloc),
               _buildPassField(bloc),
               buildSignInButton(bloc),
-              _buildFooter(),
+              _buildFooter(context),
             ],
           ),
         ),
@@ -55,12 +55,16 @@ class SignInFormWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter() {
-    return GestureDetector(
-      onTap: (){},
-      child: Container(
-        margin: EdgeInsets.only(top: 30),
-        padding: EdgeInsets.all(10),
+  Widget _buildFooter(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 30),
+      padding: EdgeInsets.all(10),
+      child: FlatButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/sign-up');
+        },
+        shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(4.0)),
         child: Text(
           'Đăng ký tài khoản',
           style: TextStyle(color: AppColor.blue, fontSize: 19),

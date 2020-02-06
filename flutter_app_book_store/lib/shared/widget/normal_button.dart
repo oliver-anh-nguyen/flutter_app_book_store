@@ -21,7 +21,7 @@ class NormalButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(4.0),
         ),
         child: Text(
-          'Sign In',
+          title,
           style: BtnStyle.normal(),
         ),
       ),
